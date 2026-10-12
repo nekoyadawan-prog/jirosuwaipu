@@ -101,8 +101,14 @@ button:focus-visible,.st:focus-visible{outline:2px solid var(--accent);outline-o
 .title .tag{margin:2px 0 14px;color:var(--fg);font-size:15px;font-weight:600}
 .toggle{border:0;background:transparent;color:var(--muted);font:600 13px var(--body);padding:8px;margin-top:4px}
 .toggle[aria-pressed="true"]{color:var(--accent)}
-.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.tabs .ghost{padding:10px 2px;font-size:13px}
+.tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+.tabs .ghost{padding:10px 2px;font-size:12.5px}
+.modes{display:grid;grid-template-columns:1fr 1fr 1fr 1.3fr;gap:5px;margin-top:4px}
+.modes .ghost{padding:11px 2px;font-size:13px}
+.modes .ghost[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);background:rgba(242,169,59,.1)}
+.modes .ghost:disabled{opacity:.45}
+.modecap{margin:0;font-size:12px;line-height:1.5;color:var(--muted);min-height:36px;text-wrap:balance}
+#btnReplay{flex:0 0 auto;padding:0 12px}
 .newl{display:flex;flex-wrap:wrap;gap:6px}
 .newl span{border:1px solid var(--accent);border-radius:999px;padding:4px 10px;font-size:12px;font-weight:700;color:var(--accent);background:rgba(242,169,59,.1)}
 .ttl .gh{font:700 11px var(--body);letter-spacing:.14em;color:var(--muted);margin:8px 0 0}
@@ -172,6 +178,7 @@ button:focus-visible,.st:focus-visible{outline:2px solid var(--accent);outline-o
   <footer class="bottom">
     <div class="status" id="status"></div>
     <div class="actions">
+      <button class="ghost" id="btnReplay" type="button" hidden>🔊 聞き直す</button>
       <button class="ghost" id="btnRemove" type="button" hidden>取り除く</button>
       <button class="ghost" id="btnServe" type="button" hidden>このまま出す</button>
       <button class="primary" id="btnNext" type="button">注文を聞く</button>
@@ -186,9 +193,10 @@ button:focus-visible,.st:focus-visible{outline:2px solid var(--accent);outline-o
     <p class="tag">スワイプで、トッピングを入れろ。</p>
     <div class="menu">
       <button class="primary" id="btnStart" type="button">スタート</button>
+      <div class="modes" role="group" aria-label="モード"><button class="ghost" id="mdX" type="button" aria-pressed="true">本番</button><button class="ghost" id="mdB" type="button" aria-pressed="false">初心者</button><button class="ghost" id="mdV" type="button" aria-pressed="false">声だけ</button><button class="ghost" id="mdR" type="button" aria-pressed="false">声・リアル</button></div>
+      <p class="modecap" id="modeCap"></p>
       <button class="ghost" id="btnRankView" type="button">ランキング・記録・称号</button>
       <button class="ghost" id="btnRules" type="button">詳しい遊び方</button>
-      <button class="toggle" id="btnBeg" type="button" aria-pressed="false"></button>
     </div>
   </div>
 </div>
@@ -197,7 +205,7 @@ button:focus-visible,.st:focus-visible{outline:2px solid var(--accent);outline-o
   <div class="card">
     <h2>遊び方</h2>
     <p>お客さんのコールを聞いて、丼にトッピングを盛り付けます。<b>5杯勝負のタイムアタック</b>です。ぴったり揃うと完成で、早いほど高得点です。</p>
-    <p><b>ニンニク・ヤサイ・アブラは、丼の奥までスワイプするほど多く入ります。</b>スワイプ中に出る輪が目安で、手前から少し・普通・マシ・マシマシで、丼の真ん中を越えるくらい遠くまでスワイプするとマシマシです。すぐにもう一度スワイプすると「追い」でもう1段増えます。<b>カラメはお玉です。</b>スワイプ1回が1杯で、入れたら取り除けません。コールされていないものは入れません。ヤサイだけは、言われなければ普通に入れます。<b>初心者モード</b>をオンにすると、コールの下に量のヒントが出ます。オフ(本番)では量は伏せたままで、出したあとに答え合わせが出ます。ランキングも別々です。<b>一言コール</b>もあります。上のメーターが減るほどお客さんの機嫌が悪くなります。速く出すほど上機嫌です。「全マシ」はニンニク・ヤサイ・アブラがマシでカラメ1杯、「全マシマシ」は全部マシマシでカラカラ、「そのまま」はヤサイを普通に入れるだけです。</p>
+    <p><b>ニンニク・ヤサイ・アブラは、丼の奥までスワイプするほど多く入ります。</b>スワイプ中に出る輪が目安で、手前から少し・普通・マシ・マシマシで、丼の真ん中を越えるくらい遠くまでスワイプするとマシマシです。同じトッピングをもう一度スワイプすると、「追い」でもう1段増えます(マシをもう一回でマシマシ)。足りなかったときの足し直しにも使えます。<b>カラメはお玉です。</b>スワイプ1回が1杯で、入れたら取り除けません。コールされていないものは入れません。ヤサイだけは、言われなければ普通に入れます。<b>モードは3つ</b>あります。「本番」はコールが文字で出て、量のヒントはありません(出したあとに答え合わせが出ます)。「初心者」はコールの下に量のヒントが出ます。「声だけ」はコールが声で流れ、画面には出ません。聞き逃したら「聞き直す」を押せますが、その間もメーターは進みます。「声・リアル」は、お客さんごとに話し方が変わります。早口、小声、ガヤガヤした店内、ゆっくりなおじいちゃん、酔っぱらい(言い直したら、最後に言ったほうが注文です)。誰が言ったかは、出したあとに分かります。ランキングは4つのモードで別々です。称号と成長の記録は、声だけとリアルが共通で、本番・初心者とは別になります。<b>一言コール</b>もあります。上のメーターが減るほどお客さんの機嫌が悪くなります。速く出すほど上機嫌です。「全マシ」はニンニク・ヤサイ・アブラがマシでカラメ1杯、「全マシマシ」は全部マシマシでカラカラ、「そのまま」はヤサイを普通に入れるだけです。</p>
     <div>
       <div class="lab">量の目安</div>
       <div class="tablewrap">
@@ -216,7 +224,7 @@ button:focus-visible,.st:focus-visible{outline:2px solid var(--accent);outline-o
 <div class="overlay" id="rankView" hidden>
   <div class="card">
     <h2>記録</h2>
-    <div class="tabs"><button class="ghost" id="tabX" type="button" aria-pressed="true">本番</button><button class="ghost" id="tabB" type="button" aria-pressed="false">初心者</button><button class="ghost" id="tabT" type="button" aria-pressed="false">称号</button><button class="ghost" id="tabS" type="button" aria-pressed="false">成長</button></div>
+    <div class="tabs"><button class="ghost" id="tabX" type="button" aria-pressed="true">本番</button><button class="ghost" id="tabB" type="button" aria-pressed="false">初心者</button><button class="ghost" id="tabV" type="button" aria-pressed="false">声</button><button class="ghost" id="tabT" type="button" aria-pressed="false">称号</button><button class="ghost" id="tabS" type="button" aria-pressed="false">成長</button></div>
     <div id="rankFull"></div>
     <button class="primary" id="btnRankClose" type="button">閉じる</button>
   </div>
@@ -360,6 +368,7 @@ button:focus-visible,.st:focus-visible{outline:2px solid var(--accent);outline-o
   /* ---------- ui ---------- */
   function renderCall(){
     var o=S.order;
+    if(o&&S.voice&&S.mode==='play'){$('call').innerHTML='<span style="white-space:nowrap">'+(S.real?'🔊 どんなお客さんかな。聞き取ろう':'🔊 お客さんの声を聞いて盛り付けよう')+'</span>';return;}
     $('call').innerHTML=o&&o.word?'<span style="white-space:nowrap">「'+o.word+'」</span>！':o?o.seq.map(function(i){return '<span style="white-space:nowrap">「'+callText(i,o.w[i])+'」</span>';}).join('、')+'！':'注文を聞くと、コールが出ます';
   }
   /* titles: judged from the five orders of one run (p perfect, h served while the customer was still happy,
@@ -375,15 +384,15 @@ button:focus-visible,.st:focus-visible{outline:2px solid var(--accent);outline-o
     {id:'shug',name:'修行中',desc:'まずは注文どおりに作るところから',t:function(){return true;}}
   ];
   /* ---------- play record: counts that persist between visits ---------- */
-  function defST(){return {runs:[0,0],orders:0,perfect:0,removes:0,oi:0,happy:0,mm:0,kk:0,nuki:0,streak:0,maxStreak:0,fastest:null,pTime:0,spec:{},perfectRuns:[0,0],best:[0,0],hist:[]};}
-  function loadST(){
+  function defST(){return {pers:{},replays:0,runs:[0,0],orders:0,perfect:0,removes:0,oi:0,happy:0,mm:0,kk:0,nuki:0,streak:0,maxStreak:0,fastest:null,pTime:0,spec:{},perfectRuns:[0,0],best:[0,0],hist:[]};}
+  function loadST(key){
     var d=defST(),a;
-    try{a=JSON.parse(localStorage.getItem('jiro-rush-stats')||'null');}catch(e){a=null;}
+    try{a=JSON.parse(localStorage.getItem(key)||'null');}catch(e){a=null;}
     if(a&&typeof a==='object'){for(var k in d)if(a[k]!==undefined)d[k]=a[k];}
     return d;
   }
-  var ST=loadST();
-  function saveST(){try{localStorage.setItem('jiro-rush-stats',JSON.stringify(ST));}catch(e){}}
+  var STN=loadST('jiro-rush-stats'),STV=loadST('jiro-rush-stats-v'),ST=STN,stKey='jiro-rush-stats',tKey='jiro-rush-titles';
+  function saveST(){try{localStorage.setItem(stKey,JSON.stringify(ST));}catch(e){}}
   function recordOrder(perfect,t,o,mk){
     ST.orders++;
     if(perfect){
@@ -394,10 +403,11 @@ button:focus-visible,.st:focus-visible{outline:2px solid var(--accent);outline-o
       if(o.w[3]===2)ST.kk++;
       if(o.c[1]&&o.w[1]===0)ST.nuki++;
       if(mk===0)ST.happy++;
+      if(o.pid)ST.pers[o.pid]=(ST.pers[o.pid]||0)+1;
     }else ST.streak=0;
     saveST();
   }
-  function sp(st,w){return (st.spec[w]||0)>=1;}
+  function hasSpec(st,w){return (st.spec[w]||0)>=1;}
   var ACH=[
     {id:'a_first',name:'初めの一杯',desc:'1杯出す',t:function(st){return st.orders>=1;}},
     {id:'a_run1',name:'初完走',desc:'5杯通して遊ぶ',t:function(st){return st.runs[0]+st.runs[1]>=1;}},
@@ -415,10 +425,10 @@ button:focus-visible,.st:focus-visible{outline:2px solid var(--accent);outline-o
     {id:'a_st20',name:'20連続ぴったり',desc:'ぴったりを20杯続ける',t:function(st){return st.maxStreak>=20;},g:function(st){return [st.maxStreak,20];}},
     {id:'a_f3',name:'三秒の壁',desc:'3.0秒以内にぴったり出す',t:function(st){return st.fastest!==null&&st.fastest<=3;}},
     {id:'a_f2',name:'二秒の壁',desc:'2.0秒以内にぴったり出す',t:function(st){return st.fastest!==null&&st.fastest<=2;}},
-    {id:'a_all',name:'全マシ',desc:'「全マシ」をぴったり出す',t:function(st){return sp(st,'全マシ');}},
-    {id:'a_allmm',name:'全マシマシ',desc:'「全マシマシ」をぴったり出す',t:function(st){return sp(st,'全マシマシ');}},
-    {id:'a_sono',name:'そのまま',desc:'「そのまま」をぴったり出す',t:function(st){return sp(st,'そのまま');}},
-    {id:'a_spec',name:'一言コールの達人',desc:'一言コール3種類を、すべてぴったり出す',t:function(st){return sp(st,'全マシ')&&sp(st,'全マシマシ')&&sp(st,'そのまま');}},
+    {id:'a_all',name:'全マシ',desc:'「全マシ」をぴったり出す',t:function(st){return hasSpec(st,'全マシ');}},
+    {id:'a_allmm',name:'全マシマシ',desc:'「全マシマシ」をぴったり出す',t:function(st){return hasSpec(st,'全マシマシ');}},
+    {id:'a_sono',name:'そのまま',desc:'「そのまま」をぴったり出す',t:function(st){return hasSpec(st,'そのまま');}},
+    {id:'a_spec',name:'一言コールの達人',desc:'一言コール3種類を、すべてぴったり出す',t:function(st){return hasSpec(st,'全マシ')&&hasSpec(st,'全マシマシ')&&hasSpec(st,'そのまま');}},
     {id:'a_mm',name:'マシマシの手応え',desc:'マシマシを含む注文をぴったり出す',t:function(st){return st.mm>=1;}},
     {id:'a_kk',name:'お玉二杯',desc:'カラカラをぴったり出す',t:function(st){return st.kk>=1;}},
     {id:'a_nuki',name:'ヤサイ抜き',desc:'ヤサイ抜きをぴったり出す',t:function(st){return st.nuki>=1;}},
@@ -430,72 +440,214 @@ button:focus-visible,.st:focus-visible{outline:2px solid var(--accent);outline-o
     {id:'a_r10',name:'十回の営業',desc:'10回遊ぶ',t:function(st){return st.runs[0]+st.runs[1]>=10;},g:function(st){return [st.runs[0]+st.runs[1],10];}},
     {id:'a_r50',name:'五十回の営業',desc:'50回遊ぶ',t:function(st){return st.runs[0]+st.runs[1]>=50;},g:function(st){return [st.runs[0]+st.runs[1],50];}}
   ];
+  /* voice mode keeps its own record and its own titles */
+  var VACH=ACH.filter(function(a){return ['a_b5','a_xshin','a_xtena','a_xnofix'].indexOf(a.id)<0;}).map(function(a){
+    var c={};for(var k in a)c[k]=a[k];
+    c.id='v'+a.id.slice(1);c.name='声・'+a.name.replace('本番','');c.desc=a.desc.replace('初心者モードオフで、','').replace('初心者モードオフで','');return c;
+  });
+  [['fast','早口キラー','早口のお客さん'],['quiet','耳をすます人','小声のお客さん'],['drunk','酔客のあしらい','酔っぱらいのお客さん'],['noisy','ガヤの中の職人','ガヤガヤの店内のお客さん'],['old','ゆっくり聞く人','おじいちゃん']].forEach(function(q){
+    VACH.push({id:'v_p_'+q[0],name:q[1],desc:q[2]+'の注文を、3杯ぴったり出す(声・リアル)',t:function(st){return (st.pers[q[0]]||0)>=3;},g:function(st){return [Math.min(st.pers[q[0]]||0,3),3];}});
+  });
+  VACH.push({id:'v_pall',name:'お客さんコンプリート',desc:'声・リアルで、5タイプのお客さんの注文を、それぞれぴったり出す',t:function(st){return ['fast','quiet','drunk','noisy','old'].every(function(k){return (st.pers[k]||0)>=1;});}});
+  VACH.push(
+    {id:'v_norep',name:'一度で聞き取る',desc:'聞き直しなしで、5杯とも間違えない',t:function(st,R){return R.p===5&&R.rp===0;}},
+    {id:'v_rep',name:'聞き直し上手',desc:'聞き直しを使って、5杯とも間違えない',t:function(st,R){return R.p===5&&R.rp>=1;}},
+    {id:'v_rep10',name:'何度でも聞く',desc:'通算10回聞き直す',t:function(st){return st.replays>=10;},g:function(st){return [st.replays,10];}}
+  );
+  var VTITLES=[
+    {id:'r_god',name:'聞き分けの神',desc:'声・リアルで、5杯ぴったり、聞き直しなし',t:function(a){return a.real&&a.p===5&&a.rp===0;}},
+    {id:'r_ear',name:'千里耳の店主',desc:'声・リアルで、5杯ぴったり',t:function(a){return a.real&&a.p===5;}},
+    {id:'r_ok',name:'客あしらい上手',desc:'声・リアルで、4杯以上ぴったり',t:function(a){return a.real&&a.p>=4;}},
+    {id:'v_shin',name:'地獄耳の店主',desc:'5杯ぴったり、聞き直しなし、ほとんど待たせない',t:function(a){return a.p===5&&a.rp===0&&a.h>=4;}},
+    {id:'v_haya',name:'耳も手も早い',desc:'お客さんを待たせずに、ほとんど間違えない',t:function(a){return a.p>=4&&a.h>=3;}},
+    {id:'v_norep',name:'一発で聞き取る',desc:'聞き直さずに、4杯以上ぴったり',t:function(a){return a.p>=4&&a.rp===0;}},
+    {id:'v_listen',name:'聞き直し上手',desc:'聞き直しを使って、4杯以上ぴったり',t:function(a){return a.p>=4&&a.rp>=1;}},
+    {id:'v_supi',name:'聞き流し職人',desc:'待たせない速さ。ただし聞き間違いが多い',t:function(a){return a.h>=4&&a.p<=2;}},
+    {id:'v_kesh',name:'取り除き頼み',desc:'取り除くを4回以上使った',t:function(a){return a.r>=4;}},
+    {id:'v_shug',name:'聞き取り修行中',desc:'まずは耳を慣らすところから',t:function(){return true;}}
+  ];
+  var TT=TITLES,AA=ACH;
+  function setProfile(v){ST=v?STV:STN;stKey=v?'jiro-rush-stats-v':'jiro-rush-stats';tKey=v?'jiro-rush-titles-v':'jiro-rush-titles';TT=v?VTITLES:TITLES;AA=v?VACH:ACH;}
   /* end of a run: update the record, hand out new titles, return the new achievements */
   function finishRecord(ti,total,time){
-    var m=S.beg?1:0,fresh=[],R={beg:S.beg,title:ti.id,p:S.perfect,r:S.removes,h:S.happy,f:S.fixed};
+    var m=S.voice?0:(S.beg?1:0),fresh=[],R={beg:S.beg,title:ti.id,p:S.perfect,r:S.removes,h:S.happy,f:S.fixed,rp:S.replays,real:S.real};
     ST.runs[m]++;if(S.perfect===RUN_N)ST.perfectRuns[m]++;
     if(total>ST.best[m])ST.best[m]=total;
-    ST.hist.push({d:Date.now(),m:m,s:total,p:S.perfect,t:Math.round(time*10)/10,ti:ti.name});
+    ST.hist.push({d:Date.now(),m:S.m,s:total,p:S.perfect,t:Math.round(time*10)/10,ti:ti.name});
     if(ST.hist.length>40)ST.hist=ST.hist.slice(-40);
     saveST();
-    ACH.forEach(function(a){if(a.t(ST,R)&&gotTitle(a.id))fresh.push(a);});
+    AA.forEach(function(a){if(a.t(ST,R)&&gotTitle(a.id))fresh.push(a);});
     return fresh;
   }
   function pickTitle(){
-    var a={p:S.perfect,h:S.happy,f:S.fixed,r:S.removes},i;
-    for(i=0;i<TITLES.length;i++)if(TITLES[i].t(a))return TITLES[i];
+    var a={p:S.perfect,h:S.happy,f:S.fixed,r:S.removes,rp:S.replays,real:S.real},i;
+    for(i=0;i<TT.length;i++)if(TT[i].t(a))return TT[i];
   }
-  function getTitles(){try{var a=JSON.parse(localStorage.getItem('jiro-rush-titles')||'[]');return Array.isArray(a)?a:[];}catch(e){return [];}}
-  function gotTitle(id){var a=getTitles(),n=a.indexOf(id)<0;if(n){a.push(id);try{localStorage.setItem('jiro-rush-titles',JSON.stringify(a));}catch(e){}}return n;}
-  function renderTitles(el){
-    var got=getTitles(),n=got.length,h;
-    h='<div class="ttl"><div class="lab">称号 '+n+' / '+(TITLES.length+ACH.length)+'</div><div class="gh">1回の遊びに付く称号</div>';
-    TITLES.forEach(function(t){var g=got.indexOf(t.id)>=0;h+='<div class="row '+(g?'got':'lock')+'"><b>'+(g?t.name:'？？？')+'</b><span>'+t.desc+'</span></div>';});
-    h+='<div class="gh">記録の称号</div>';
-    ACH.forEach(function(t){
-      var g=got.indexOf(t.id)>=0,p=t.g?t.g(ST):null,pc=p?Math.min(100,Math.round(p[0]/p[1]*100)):0;
+  function getTitles(k){try{var a=JSON.parse(localStorage.getItem(k||tKey)||'[]');return Array.isArray(a)?a:[];}catch(e){return [];}}
+  function gotTitle(id){var a=getTitles(),n=a.indexOf(id)<0;if(n){a.push(id);try{localStorage.setItem(tKey,JSON.stringify(a));}catch(e){}}return n;}
+  function titleBlock(titles,ach,st,got,head){
+    var h='<div class="gh">'+head+'</div>';
+    titles.forEach(function(t){var g=got.indexOf(t.id)>=0;h+='<div class="row '+(g?'got':'lock')+'"><b>'+(g?t.name:'？？？')+'</b><span>'+t.desc+'</span></div>';});
+    ach.forEach(function(t){
+      var g=got.indexOf(t.id)>=0,p=t.g?t.g(st):null,pc=p?Math.min(100,Math.round(p[0]/p[1]*100)):0;
       h+='<div class="row '+(g?'got':'lock')+'"><b>'+(g?t.name:'？？？')+'</b><span>'+t.desc+(p&&!g?'('+Math.min(p[0],p[1])+' / '+p[1]+')':'')+'</span>'+(p&&!g?'<div class="pg"><i style="width:'+pc+'%"></i></div>':'')+'</div>';
     });
-    el.innerHTML=h+'</div>';
+    return h;
+  }
+  function renderTitles(el){
+    var gn=getTitles('jiro-rush-titles'),gv=getTitles('jiro-rush-titles-v');
+    el.innerHTML='<div class="ttl"><div class="lab">称号 '+gn.length+' / '+(TITLES.length+ACH.length)+'(本番・初心者)</div>'+titleBlock(TITLES,ACH,STN,gn,'1回の遊びと記録の称号')+
+      '<div class="lab" style="margin-top:14px">称号 '+gv.length+' / '+(VTITLES.length+VACH.length)+'(声だけモード)</div>'+titleBlock(VTITLES,VACH,STV,gv,'声だけモードの称号')+'</div>';
   }
   /* growth tab: totals, a bar per recent run, and the last few plays */
-  function pad2(n){return n<10?'0'+n:''+n;}
-  function renderGrowth(el){
-    var st=ST,h,tot=st.runs[0]+st.runs[1],i,r,d,hs=st.hist.slice(-12),rows=st.hist.slice(-8).reverse(),main,txt='';
-    if(!st.orders){el.innerHTML='<p>まだ記録がありません。1回遊ぶと、ここに成長が出ます。</p>';return;}
+  function growthHtml(st,v){
+    var h,tot=v?st.runs[0]:st.runs[0]+st.runs[1],hs=st.hist.slice(-12),rows=st.hist.slice(-8).reverse(),main,txt='',d;
     h='<div class="sg">';
-    h+='<div><small>遊んだ回数</small><b>'+tot+'<em>本番'+st.runs[0]+' · 初心者'+st.runs[1]+'</em></b></div>';
+    h+='<div><small>遊んだ回数</small><b>'+tot+(v?'':'<em>本番'+st.runs[0]+' · 初心者'+st.runs[1]+'</em>')+'</b></div>';
     h+='<div><small>出した杯数</small><b>'+st.orders+'<em>杯</em></b></div>';
-    h+='<div><small>ぴったり率</small><b>'+Math.round(st.perfect/st.orders*100)+'<em>%('+st.perfect+'杯)</em></b></div>';
+    h+='<div><small>ぴったり率</small><b>'+(st.orders?Math.round(st.perfect/st.orders*100):0)+'<em>%('+st.perfect+'杯)</em></b></div>';
     h+='<div><small>ぴったりの平均</small><b>'+(st.perfect?(st.pTime/st.perfect).toFixed(1):'-')+'<em>秒</em></b></div>';
     h+='<div><small>最速のぴったり</small><b>'+(st.fastest!==null?st.fastest.toFixed(1):'-')+'<em>秒</em></b></div>';
     h+='<div><small>最長の連続ぴったり</small><b>'+st.maxStreak+'<em>杯</em></b></div>';
-    h+='<div><small>ベスト(本番)</small><b>'+st.best[0]+'<em>点</em></b></div>';
-    h+='<div><small>ベスト(初心者)</small><b>'+st.best[1]+'<em>点</em></b></div>';
+    if(v){h+='<div><small>ベスト</small><b>'+st.best[0]+'<em>点</em></b></div><div><small>聞き直した回数</small><b>'+(st.replays||0)+'<em>回</em></b></div>';}
+    else{h+='<div><small>ベスト(本番)</small><b>'+st.best[0]+'<em>点</em></b></div><div><small>ベスト(初心者)</small><b>'+st.best[1]+'<em>点</em></b></div>';}
     h+='<div><small>取り除いた回数</small><b>'+st.removes+'<em>回</em></b></div>';
     h+='<div><small>追いスワイプ</small><b>'+st.oi+'<em>回</em></b></div>';
     h+='</div>';
-    main=st.hist.filter(function(x){return x.m===0;});
+    main=v?st.hist:st.hist.filter(function(x){return x.m===0;});
     if(main.length>=4){
       var last=main.slice(-3),prev=main.slice(-6,-3),av=function(a){return Math.round(a.reduce(function(x,y){return x+y.s;},0)/a.length);},dl=av(last)-av(prev);
-      txt='本番の直近3回は平均'+av(last)+'点。その前の'+prev.length+'回より'+(dl>=0?'+':'')+dl+'点です。';
+      txt=(v?'声だけモード':'本番')+'の直近3回は平均'+av(last)+'点。その前の'+prev.length+'回より'+(dl>=0?'+':'')+dl+'点です。';
     }
     if(hs.length){
-      h+='<div class="lab" style="margin-top:6px">直近の点数(明るい色が本番)</div><div class="bars">';
-      hs.forEach(function(x){h+='<i class="'+(x.m?'b':'')+'" style="height:'+Math.max(4,Math.round(x.s/10))+'%" title="'+x.s+'点"></i>';});
+      h+='<div class="lab" style="margin-top:6px">直近の点数'+(v?'':'(明るい色が本番)')+'</div><div class="bars">';
+      hs.forEach(function(x){h+='<i class="'+(x.m===1?'b':'')+'" style="height:'+Math.max(4,Math.round(x.s/10))+'%" title="'+x.s+'点"></i>';});
       h+='</div>';
     }
     if(txt)h+='<p class="note">'+txt+'</p>';
     h+='<div class="lab" style="margin-top:6px">最近の遊び</div><div class="hist">';
-    rows.forEach(function(x){d=new Date(x.d);h+='<div class="row"><span>'+(d.getMonth()+1)+'/'+d.getDate()+'</span><span><b>'+x.s+'点</b> · '+x.p+'/'+RUN_N+'杯 · '+(x.m?'初心者':'本番')+'</span><span>'+x.ti+'</span></div>';});
-    el.innerHTML=h+'</div>';
+    rows.forEach(function(x){d=new Date(x.d);h+='<div class="row"><span>'+(d.getMonth()+1)+'/'+d.getDate()+'</span><span><b>'+x.s+'点</b> · '+x.p+'/'+RUN_N+'杯'+(v?(x.m===3?' · リアル':''):' · '+(x.m===1?'初心者':'本番'))+'</span><span>'+x.ti+'</span></div>';});
+    return h+'</div>';
   }
-  var beginner=false;
-  try{beginner=localStorage.getItem('jiro-rush-beginner')==='1';}catch(e){}
-  function showBeg(){var b=$('btnBeg');b.setAttribute('aria-pressed',beginner?'true':'false');b.textContent=beginner?'初心者モード:オン(量のヒントを表示)':'初心者モード:オフ(量のヒントは出ません)';}
+  function renderGrowth(el){
+    var h='';
+    if(STN.orders)h+='<div class="lab" style="margin-top:2px">本番・初心者モード</div>'+growthHtml(STN,false);
+    if(STV.orders)h+='<div class="lab" style="margin-top:16px">声だけモード</div>'+growthHtml(STV,true);
+    el.innerHTML=h||'<p>まだ記録がありません。1回遊ぶと、ここに成長が出ます。</p>';
+  }
+  /* ---------- modes: 0 main, 1 beginner, 2 voice-only ---------- */
+  var gameMode=0;
+  try{var gm=localStorage.getItem('jiro-rush-mode');gameMode=gm==='1'?1:(gm==='2'?2:(gm==='3'?3:(gm===null&&localStorage.getItem('jiro-rush-beginner')==='1'?1:0)));}catch(e){}
+  var synth=window.speechSynthesis||null;
+  function voiceOK(){return !!(synth&&window.SpeechSynthesisUtterance);}
+  function jaVoice(){try{var v=synth.getVoices(),i;for(i=0;i<v.length;i++)if(/^ja/i.test(v[i].lang))return v[i];}catch(e){}return null;}
+  function voiceUsable(){
+    if(!voiceOK())return false;
+    try{var v=synth.getVoices();return !v.length||!!jaVoice();}catch(e){return true;}   /* an empty list may just not be loaded yet */
+  }
+  var CAPS=['コールは文字で出ます。量のヒントはありません。','コールの下に、量のヒントが出ます。','コールは声だけ。画面には出ません。耳で聞いて盛り付けます。','お客さんごとに話し方が違う、いちばん難しいモード。早口、小声、ガヤ、酔っぱらい…。'];
+  function showMode(){
+    var ids=['mdX','mdB','mdV','mdR'],i,ok=voiceUsable();
+    if(!ok&&gameMode>=2)gameMode=0;
+    for(i=0;i<4;i++)$(ids[i]).setAttribute('aria-pressed',i===gameMode?'true':'false');
+    $('mdV').disabled=!ok;$('mdR').disabled=!ok;
+    $('modeCap').textContent=CAPS[gameMode]+(ok?'':'(この端末では声だけモードを使えません)');
+  }
   function showRankTab(m){
-    $('tabX').setAttribute('aria-pressed',m===0?'true':'false');$('tabB').setAttribute('aria-pressed',m===1?'true':'false');$('tabT').setAttribute('aria-pressed',m===2?'true':'false');$('tabS').setAttribute('aria-pressed',m===3?'true':'false');
-    if(m===2)renderTitles($('rankFull'));else if(m===3)renderGrowth($('rankFull'));else renderRank($('rankFull'),false,-1,true,m);
+    var ids=['tabX','tabB','tabV','tabT','tabS'],i;
+    for(i=0;i<5;i++)$(ids[i]).setAttribute('aria-pressed',i===m?'true':'false');
+    if(m===3)renderTitles($('rankFull'));
+    else if(m===4)renderGrowth($('rankFull'));
+    else if(m===2){
+      var box=$('rankFull'),d1=document.createElement('div'),d2=document.createElement('div');
+      d2.style.marginTop='14px';renderRank(d1,false,-1,true,2);renderRank(d2,false,-1,true,3);
+      box.innerHTML='';box.appendChild(d1);box.appendChild(d2);
+    }else renderRank($('rankFull'),false,-1,true,m);
+  }
+  /* spoken call: the order is read out; the clock starts when the voice stops */
+  var SAYN=['ニンニク','ヤサイ','アブラ','カラメ'],SAYL=['ぬき','すこし','','マシ','マシマシ'];
+  function spokenCall(o){
+    if(o.word)return {'全マシ':'ぜんマシ','全マシマシ':'ぜんマシマシ','そのまま':'そのまま'}[o.word]+'。';
+    return o.seq.map(function(i){
+      var w=o.w[i];
+      if(i===3)return w===1?'カラメ':'カラカラ';
+      return SAYN[i]+(SAYL[w]?'、'+SAYL[w]:'');
+    }).join('。')+'。';
+  }
+  function speak(text,opt,done){
+    var u,v;
+    if(!voiceOK()||muted){if(done)setTimeout(done,50);return;}
+    opt=opt||{};
+    try{
+      u=new SpeechSynthesisUtterance(text);u.lang='ja-JP';v=jaVoice();if(v)u.voice=v;
+      u.rate=opt.rate||1.1;u.pitch=opt.pitch||0.85;u.volume=opt.vol===undefined?1:opt.vol;
+      if(done){u.onend=done;u.onerror=done;}
+      synth.speak(u);
+    }catch(e){if(done)setTimeout(done,50);}
+  }
+  function stopSpeak(){try{if(synth)synth.cancel();}catch(e){}noiseOff();}
+  /* customers: each one speaks differently in 声・リアル */
+  var PERSONAS=[
+    {id:'normal',label:'ふつうのお客さん',w:2,rate:1.08,pitch:0.8,vol:1},
+    {id:'fast',label:'早口のお客さん',w:2,rate:1.9,pitch:0.9,vol:1},
+    {id:'quiet',label:'小声のお客さん',w:2,rate:0.95,pitch:0.7,vol:0.25},
+    {id:'drunk',label:'酔っぱらいのお客さん',w:2,rate:0.62,pitch:0.55,vol:0.9},
+    {id:'noisy',label:'ガヤガヤの店内のお客さん',w:2,rate:1.1,pitch:0.8,vol:1,noise:0.3},
+    {id:'old',label:'おじいちゃん',w:1,rate:0.7,pitch:0.45,vol:0.7}
+  ];
+  function pickPersona(){
+    var t=0,r,i;
+    PERSONAS.forEach(function(p){t+=p.w;});
+    r=Math.random()*t;
+    for(i=0;i<PERSONAS.length;i++){r-=PERSONAS[i].w;if(r<0)return PERSONAS[i];}
+    return PERSONAS[0];
+  }
+  function buildSpoken(o,p){
+    var parts,k=-1,j,ii,wrong;
+    if(o.word)parts=[{'全マシ':'ぜんマシ','全マシマシ':'ぜんマシマシ','そのまま':'そのまま'}[o.word]];
+    else parts=o.seq.map(function(i){var w=o.w[i];if(i===3)return w===1?'カラメ':'カラカラ';return SAYN[i]+(SAYL[w]?'、'+SAYL[w]:'');});
+    if(p.id==='drunk'){
+      /* sometimes says the wrong level first and corrects it: the last one counts */
+      if(!o.word)for(j=0;j<o.seq.length;j++){ii=o.seq[j];if(ii!==3&&o.w[ii]>=3&&k<0&&Math.random()<0.7)k=j;}
+      if(k>=0){ii=o.seq[k];wrong=o.w[ii]===4?'マシ':'マシマシ';parts[k]=SAYN[ii]+'、'+wrong+'。いや、'+SAYL[o.w[ii]];}
+      return 'えーと、'+parts.join('。ヒック。')+'。';
+    }
+    if(p.id==='old')return 'ええと、'+parts.join('。')+'。';
+    if(p.id==='fast')return parts.join('、')+'。';
+    return parts.join('。')+'。';
+  }
+  /* restaurant chatter: filtered noise under the voice */
+  var noiseSrc=null;
+  function noiseOn(g){
+    if(noiseSrc||muted)return;
+    ensureAudio();if(!actx)return;
+    try{
+      var len=actx.sampleRate*2,buf=actx.createBuffer(1,len,actx.sampleRate),d=buf.getChannelData(0),i,last=0;
+      for(i=0;i<len;i++){last=(last+0.06*(Math.random()*2-1))/1.06;d[i]=last*8;}
+      var src=actx.createBufferSource(),f=actx.createBiquadFilter(),v=actx.createGain(),lfo=actx.createOscillator(),lg=actx.createGain();
+      src.buffer=buf;src.loop=true;f.type='bandpass';f.frequency.value=900;f.Q.value=0.6;v.gain.value=g;
+      lfo.frequency.value=3.1;lg.gain.value=g*0.5;lfo.connect(lg);lg.connect(v.gain);lfo.start();
+      src.connect(f);f.connect(v);v.connect(actx.destination);src.start();
+      noiseSrc={src:src,lfo:lfo,v:v};
+    }catch(e){noiseSrc=null;}
+  }
+  function noiseOff(){
+    var n=noiseSrc;if(!n)return;noiseSrc=null;
+    try{n.v.gain.setTargetAtTime(0,actx.currentTime,0.08);}catch(e){}
+    setTimeout(function(){try{n.src.stop();n.lfo.stop();}catch(e){}},400);
+  }
+  var speakTok=0;
+  function callByVoice(first){
+    var tok=++speakTok,o=S.order,p=o.persona||PERSONAS[0],fin=function(){
+      if(tok!==speakTok)return;
+      S.speaking=false;noiseOff();
+      if(first&&S.mode==='play'&&S.t0>performance.now())S.t0=performance.now();
+    };
+    S.speaking=true;
+    stopSpeak();
+    if(p.noise)noiseOn(p.noise);
+    speak(o.spoken||spokenCall(o),{rate:p.rate,pitch:p.pitch,vol:p.vol},fin);
+    setTimeout(fin,16000);   /* in case the browser never reports the end */
   }
   function renderCells(){
     var o=S.order,h='',i,k,w,g,m,pips,fc,cov=S.mode==='play'&&!S.beg;
@@ -515,7 +667,7 @@ button:focus-visible,.st:focus-visible{outline:2px solid var(--accent);outline-o
   function setStatus(t){$('status').textContent=t;}
   function updateButtons(){
     var play=S.mode==='play';
-    $('btnRemove').hidden=!play;$('btnServe').hidden=!play;
+    $('btnRemove').hidden=!play;$('btnServe').hidden=!play;$('btnReplay').hidden=!(play&&S.voice);
     var nb=$('btnNext');nb.hidden=play;
     nb.textContent=S.mode==='result'?(S.round>=RUN_N?'結果を見る':'次の注文を聞く'):'注文を聞く';
   }
@@ -525,11 +677,11 @@ button:focus-visible,.st:focus-visible{outline:2px solid var(--accent);outline-o
   /* ranking: this device's top 10, higher score first, faster time breaks ties */
   /* records carry m: 1 = beginner mode (amounts shown), 0 = main mode (amounts hidden). Old records without m were beginner games. */
   function allRank(){try{var a=JSON.parse(localStorage.getItem('jiro-rush-rank')||'[]');return Array.isArray(a)?a:[];}catch(e){return [];}}
-  function isB(r){return r.m===undefined||r.m===1;}
-  function getRank(m){return allRank().filter(function(r){return isB(r)===(m===1);}).sort(function(x,y){return y.s-x.s||x.t-y.t||x.d-y.d;});}
+  function modeOf(r){return r.m===undefined?1:r.m;}
+  function getRank(m){return allRank().filter(function(r){return modeOf(r)===m;}).sort(function(x,y){return y.s-x.s||x.t-y.t||x.d-y.d;});}
   function addRank(s,t,p,m){
     var all=allRank(),rec={s:s,t:Math.round(t*10)/10,p:p,m:m,d:Date.now()};
-    var others=all.filter(function(r){return isB(r)!==(m===1);});
+    var others=all.filter(function(r){return modeOf(r)!==m;});
     var list=getRank(m);
     list.push(rec);
     list.sort(function(x,y){return y.s-x.s||x.t-y.t||x.d-y.d;});
@@ -542,8 +694,8 @@ button:focus-visible,.st:focus-visible{outline:2px solid var(--accent);outline-o
   }
   function renderRank(el,mine,cur,full,m){
     var a=getRank(m),h='',i,n=full?a.length:Math.min(a.length,5);
-    if(!a.length){el.innerHTML=full?'<p>まだ記録がありません。5杯出すと、ここに載ります。</p>':'';return;}
-    h='<div class="rank"><div class="lab">ランキング · '+(m===1?'初心者モード':'本番')+'(この端末)</div>';
+    if(!a.length){el.innerHTML=full?'<p>'+(['本番','初心者モード','声だけモード','声・リアルモード'][m]||'')+':まだ記録がありません。5杯出すと、ここに載ります。</p>':'';return;}
+    h='<div class="rank"><div class="lab">ランキング · '+(['本番','初心者モード','声だけモード','声・リアルモード'][m]||'本番')+'(この端末)</div>';
     for(i=0;i<n;i++)h+=rowHtml(a[i],i+1,mine&&i===cur);
     if(mine&&cur>=5){h+=(cur>5?'<div class="gap">⋮</div>':'')+(cur<a.length?rowHtml(a[cur],cur+1,true):'<div class="row me"><span class="no">圏外</span><span><b>'+S.total+'</b>点</span><span>'+S.time.toFixed(1)+'秒</span></div>');}
     el.innerHTML=h+'</div>';
@@ -551,6 +703,7 @@ button:focus-visible,.st:focus-visible{outline:2px solid var(--accent);outline-o
   function shout(text,kind){
     var el=$('shout');
     el.textContent=text;el.className='shout '+(kind||'');
+    if(S.voice&&!S.speaking&&S.mode!=='idle'){stopSpeak();speak(text,{rate:1.15,pitch:kind==='bad'?0.7:0.95});}
     el.hidden=false;
     void el.offsetWidth;
     el.classList.add('go');
@@ -564,17 +717,19 @@ button:focus-visible,.st:focus-visible{outline:2px solid var(--accent);outline-o
 
   /* ---------- game flow ---------- */
   function startRun(){
-    S.beg=beginner;S.happy=0;S.fixed=0;S.removes=0;S.round=0;S.total=0;S.perfect=0;S.time=0;
+    S.m=gameMode;S.beg=gameMode===1;S.voice=gameMode>=2;S.real=gameMode===3;S.replays=0;S.speaking=false;setProfile(S.voice);S.happy=0;S.fixed=0;S.removes=0;S.round=0;S.total=0;S.perfect=0;S.time=0;
     $('intro').hidden=true;$('over').hidden=true;
     startOrder();
   }
   function startOrder(){
-    S.orderRem=0;S.round++;S.order=genOrder();S.got=[0,0,0,0];S.hist=[];S.flash=null;
+    S.orderRem=0;S.round++;S.order=genOrder();
+    if(S.voice){var pp=S.real?pickPersona():PERSONAS[0];S.order.persona=pp;S.order.pid=S.real?pp.id:null;S.order.spoken=buildSpoken(S.order,pp);}S.got=[0,0,0,0];S.hist=[];S.flash=null;
     moodNow=-1;
     items=[[],[],[],[]];ghosts=[];ripples=[];ladles=[];pops=[];ladleCool=0;combo=null;showBadge(-1,0);
     S.mode='play';S.t0=performance.now();S.elapsed=0;
+    if(S.voice){S.t0=performance.now()+1e7;callByVoice(true);}else stopSpeak();
     $('shout').hidden=true;
-    setStatus('丼の奥までスワイプするほど多く入ります。すぐもう一度スワイプで「追い」。カラメはお玉で、1回1杯です。');
+    setStatus(S.voice?'コールは声だけ。聞き逃したら「聞き直す」(その間もメーターは進みます)。':'丼の奥までスワイプするほど多く入ります。同じものをもう一度スワイプで1段追加。カラメはお玉で、1回1杯です。');
     renderCall();renderCells();updateButtons();updateHead();
   }
   function spawn(i,n,now,from,d0){
@@ -635,7 +790,7 @@ button:focus-visible,.st:focus-visible{outline:2px solid var(--accent);outline-o
   }
   function finishOrder(){
     if(S.mode!=='play')return;
-    var now=performance.now(),t=(now-S.t0)/1000,o=S.order,diff=0,worst=-1,wd=0,i,d,score,msg;
+    var now=performance.now(),t=Math.max(0.1,(now-S.t0)/1000),o=S.order,diff=0,worst=-1,wd=0,i,d,score,msg;
     S.elapsed=t;
     var mk=moodIdx(clamp(1-t/(o.par*2),0,1)),mood=MOODS[mk];
     if(mk===0)S.happy++;
@@ -653,8 +808,9 @@ button:focus-visible,.st:focus-visible{outline:2px solid var(--accent);outline-o
       sfx('bad');
     }
     msg+=' · お客さん '+mood.face+mood.label;
+    if(S.real&&o.persona)msg+=' · '+o.persona.label;
     recordOrder(diff===0,t,o,mk);
-    S.total+=score;S.time+=t;S.mode='result';renderCells();
+    S.total+=score;S.time+=t;S.mode='result';S.speaking=false;speakTok++;renderCells();renderCall();
     showBadge(-1,0);combo=null;
     setStatus(msg);updateButtons();updateHead();
   }
@@ -668,8 +824,9 @@ button:focus-visible,.st:focus-visible{outline:2px solid var(--accent);outline-o
     $('overTitle').textContent=ti.name;
     $('overAward').innerHTML=(isNew?'<em>NEW</em>':'')+ti.desc;
     $('overDetail').textContent='評価 '+title+' · 合計 '+tt+'点 · 完成 '+S.perfect+' / '+RUN_N+'杯 · 合計 '+S.time.toFixed(1)+'秒 · '+(nb?'ベスト更新!':'ベスト '+best+'点');
-    var pos=addRank(tt,S.time,S.perfect,S.beg?1:0);
-    renderRank($('rankOver'),true,pos,false,S.beg?1:0);
+    var pos=addRank(tt,S.time,S.perfect,S.m);
+    renderRank($('rankOver'),true,pos,false,S.m);
+    stopSpeak();
     $('over').hidden=false;
   }
 
@@ -677,11 +834,17 @@ button:focus-visible,.st:focus-visible{outline:2px solid var(--accent);outline-o
   /* how far the swipe travelled from the station decides the amount: rings at three distances */
   function tierOf(d,t){return d<t[0]?0:(d<t[1]?1:(d<t[2]?2:(d<t[3]?3:4)));}
   function addPop(text,color){pops.push({text:text,t0:performance.now(),color:color});}
-  /* tier 1 少し, 2 普通, 3 マシ. A second swipe within a second is 追い: one step more.
+  /* tier 1 少し, 2 普通, 3 マシ, 4 マシマシ by distance.
      Karame ignores tier: one swipe is one ladle, with a short pause while it pours. */
+  /* a swipe at 'tier' sets the topping to that level; if it is already at or above that level,
+     the swipe adds one more level instead (追い). Capped at マシマシ (4). */
+  function resultLevel(i,tier){
+    var cur=S.got[i];
+    return cur>=tier?{target:Math.min(4,cur+1),bump:true}:{target:tier,bump:false};
+  }
   function registerSwipe(i,tier){
     if(S.mode!=='play')return;
-    var now=performance.now(),fu;
+    var now=performance.now(),r;
     if(i===3){
       if(now<ladleCool)return;
       ladleCool=now+450;
@@ -689,13 +852,12 @@ button:focus-visible,.st:focus-visible{outline:2px solid var(--accent);outline-o
       addUnits(3,1);
       return;
     }
-    fu=!!(combo&&combo.i===i&&now-combo.t<=1000);
-    if(fu)ST.oi++;
-    combo={i:i,t:now};
+    r=resultLevel(i,tier);
+    if(r.target<=S.got[i]){addPop('これ以上は無理',TOP[i].c2);return;}   /* already at マシマシ */
+    if(r.bump){ST.oi++;combo={i:i,t:now};showBadge(i,'追い');}
     sfx('swipe');
-    showBadge(i,'追い');
-    addPop(fu?'追い +1':TIERS[tier],TOP[i].c2);
-    addUnits(i,fu?1:tier);
+    addPop((r.bump?'追い → ':'')+TIERS[r.target],TOP[i].c2);
+    addUnits(i,r.target-S.got[i]);
   }
   stEls.forEach(function(el){
     var i=parseInt(el.dataset.i,10);
@@ -739,14 +901,21 @@ button:focus-visible,.st:focus-visible{outline:2px solid var(--accent);outline-o
     S.mode='idle';S.order=null;S.round=0;S.total=0;S.got=[0,0,0,0];items=[[],[],[],[]];ladles=[];pops=[];combo=null;moodNow=-1;
     $('mood').textContent='';$('time').textContent='0.0';$('tfill').style.transform='scaleX(1)';
     $('call').textContent='';renderCall();renderCells();updateButtons();updateHead();setStatus('');showBadge(-1,0);
-    $('over').hidden=true;$('intro').hidden=false;
+    stopSpeak();setProfile(false);$('over').hidden=true;$('intro').hidden=false;
   });
-  $('btnBeg').addEventListener('click',function(){beginner=!beginner;try{localStorage.setItem('jiro-rush-beginner',beginner?'1':'0');}catch(e){}showBeg();});
+  [['mdX',0],['mdB',1],['mdV',2],['mdR',3]].forEach(function(p){$(p[0]).addEventListener('click',function(){gameMode=p[1];try{localStorage.setItem('jiro-rush-mode',String(gameMode));}catch(e){}showMode();});});
+  $('btnReplay').addEventListener('click',function(){
+    if(S.mode!=='play'||!S.voice)return;
+    S.replays++;ST.replays=(ST.replays||0)+1;saveST();
+    callByVoice(false);
+  });
+  if(synth&&synth.addEventListener)synth.addEventListener('voiceschanged',showMode);
   $('tabX').addEventListener('click',function(){showRankTab(0);});
   $('tabB').addEventListener('click',function(){showRankTab(1);});
-  $('tabT').addEventListener('click',function(){showRankTab(2);});
-  $('tabS').addEventListener('click',function(){showRankTab(3);});
-  showBeg();
+  $('tabV').addEventListener('click',function(){showRankTab(2);});
+  $('tabT').addEventListener('click',function(){showRankTab(3);});
+  $('tabS').addEventListener('click',function(){showRankTab(4);});
+  showMode();
   $('btnRules').addEventListener('click',function(){$('rules').hidden=false;});
   $('btnRulesClose').addEventListener('click',function(){$('rules').hidden=true;});
   $('btnRankView').addEventListener('click',function(){showRankTab(0);$('rankView').hidden=false;});
@@ -891,7 +1060,7 @@ button:focus-visible,.st:focus-visible{outline:2px solid var(--accent);outline-o
   function frame(now){
     var f,k;
     if(S.mode==='play'){
-      S.elapsed=(now-S.t0)/1000;
+      S.elapsed=Math.max(0,(now-S.t0)/1000);
       $('time').textContent=S.elapsed.toFixed(1);
       f=clamp(1-S.elapsed/(S.order.par*2),0,1);
       $('tfill').style.transform='scaleX('+f+')';
@@ -936,7 +1105,8 @@ button:focus-visible,.st:focus-visible{outline:2px solid var(--accent);outline-o
     }
     ctx.restore();
     if(tier>0){
-      txt=(combo&&combo.i===sw.i&&performance.now()-combo.t<=1000)?'追い +1':TIERS[tier];
+      var rl=resultLevel(sw.i,tier);
+      txt=rl.target<=S.got[sw.i]?'これ以上は無理':(rl.bump?'追い → ':'')+TIERS[rl.target];
       ctx.save();ctx.font='900 '+Math.round(Rb*0.17)+'px '+DFONT;ctx.textAlign='center';ctx.textBaseline='middle';
       /* keep the label well away from the finger: centred, on the opposite side of the bowl from the thumb */
       w=ctx.measureText(txt).width+22;x=cx;y=p.y>cy?cy-Rb*0.62:cy+Rb*0.62;
